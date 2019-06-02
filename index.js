@@ -18,12 +18,20 @@ app.post("/plant", (req, res) => {
     }
 });
 
-app.get("/plant", (req, res) => {
+app.get("/plant/all", (req, res) => {
     console.log("Incoming get request from " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " for all plant data.");
     plantDbManager.getAllPlantData((data) => {
         res.setHeader('Content-Type', 'application/json');
         return res.send(JSON.stringify(data));
     });
+});
+
+app.get("/plant/latest", (req, res) => {
+  console.log("Incoming get request from " + (req.headers['x-forwarded-for'] || req.connection.remoteAddress) + " for all plant data.");
+  plantDbManager.getLatestPlantData((data) => {
+      res.setHeader('Content-Type', 'application/json');
+      return res.send(JSON.stringify(data));
+  });
 });
 
 app.listen(3000, () => {

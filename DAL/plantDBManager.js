@@ -36,6 +36,23 @@ let getAllPlantData = (callback) => {
     }
 }
 
+let getLatestPlantData = (callback) => {
+  let db = openDB();
+  let result = [];
+  if(db!= null){
+      let sql = "SELECT sensorId, sensorValue, time FROM plantReadings GROUP BY sensorId"
+      db.each(sql, [], (err, row) => {
+          if(err){
+              throw err;
+          }
+          result.push(row);
+      }, () => {
+          db.close();
+          callback(result);
+      });
+  }
+}
+
 let openDB = () => {
     let db = new sqlite3.Database(path.join(__dirname, '..', 'db', 'plantdata.db'), (err) => {
         if (err){
@@ -49,5 +66,6 @@ let openDB = () => {
 module.exports = {
     testDBConnection: testDBConnection,
     addPlantData: addPlantData,
-    getAllPlantData: getAllPlantData
+    getAllPlantData: getAllPlantData,
+    getLatestPlantData: getLatestPlantData
 }
